@@ -27,7 +27,9 @@ export const useBuildAssetTree = ({ companyId }: { companyId?: string }) => {
   const buildTree = useCallback((): TreeNode[] => {
     const locationMap: { [key: string]: TreeNode } = {};
     const assetMap: { [key: string]: TreeNode } = {};
-
+    const addedChildNodes = new Set<string>(); // Track nodes added as children
+  
+    // Step 1: Populate locationMap with locations
     locations.forEach((location) => {
       locationMap[location.id] = {
         id: location.id,
@@ -37,49 +39,52 @@ export const useBuildAssetTree = ({ companyId }: { companyId?: string }) => {
         object: location,
       };
     });
-
+  
+    // Step 2: Populate assetMap with assets
     assets.forEach((asset) => {
-      const assetNode: TreeNode = {
+      assetMap[asset.id] = {
         id: asset.id,
         name: asset.name,
         type: asset.sensorType ? "component" : "asset",
         children: [],
         object: asset,
       };
-      if (asset.parentId) {
-        if (!assetMap[asset.parentId]) {
-          assetMap[asset.parentId] = {
-            id: asset.parentId,
-            name: "",
-            type: "asset",
-            children: [],
-            object: asset,
-          };
-        }
-        assetMap[asset.parentId].children?.push(assetNode);
-      }
-      assetMap[asset.id] = assetNode;
     });
-
+  
+    // Step 3: Link assets to their parent asset or location
     assets.forEach((asset) => {
-      if (asset.locationId) {
+      const assetNode = assetMap[asset.id];
+      
+      // If asset has a parent asset, link it to the parent asset
+      if (asset.parentId && assetMap[asset.parentId]) {
+        const parentAssetNode = assetMap[asset.parentId];
+        parentAssetNode.children = parentAssetNode.children || [];
+        parentAssetNode.children.push(assetNode);
+        addedChildNodes.add(asset.id); // Mark as added to avoid duplicating
+      } 
+      // Otherwise, link the asset to a location if it has a locationId
+      else if (asset.locationId && locationMap[asset.locationId]) {
         const locationNode = locationMap[asset.locationId];
-        if (locationNode) {
-          locationNode.children?.push(assetMap[asset.id]);
-        }
+        locationNode.children = locationNode.children || [];
+        locationNode.children.push(assetNode);
+        addedChildNodes.add(asset.id); // Mark as added to avoid duplicating
       }
     });
-
+  
+    // Step 4: Link locations to their parent locations (if they have one)
     locations.forEach((location) => {
-      if (location.parentId) {
+      if (location.parentId && locationMap[location.parentId]) {
         const parentLocation = locationMap[location.parentId];
-        if (parentLocation) {
-          parentLocation.children?.push(locationMap[location.id]);
-        }
+        parentLocation.children = parentLocation.children || [];
+        parentLocation.children.push(locationMap[location.id]);
+        addedChildNodes.add(location.id); // Mark as added to avoid duplicating
       }
     });
-
-    return Object.values(locationMap).filter((location) => !location.parentId);
+  
+    // Step 5: Return only root locations (locations without parentId and not added as a child)
+    return Object.values(locationMap).filter(
+      (location) => !location.parentId && !addedChildNodes.has(location.id)
+    );
   }, [locations, assets]);
 
   const filterTree = useCallback(

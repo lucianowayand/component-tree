@@ -1,6 +1,54 @@
 import { Box, Typography } from "@mui/material";
+import { TreeNode } from "../hooks/useBuildAssetTree";
+import { ThunderIcon, WarningIcon } from "./icons";
 
-export const Header = ({ companyName }: { companyName: string }) => {
+export const Header = ({
+  companyName,
+  selectedNode,
+}: {
+  companyName: string;
+  selectedNode: TreeNode | null;
+}) => {
+  const isCritical =
+    (selectedNode?.object &&
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      "status" in selectedNode?.object &&
+      selectedNode?.object?.status === "alert") ||
+    false;
+
+  const isEnergy =
+    (selectedNode?.object &&
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      "sensorType" in selectedNode?.object &&
+      selectedNode?.object?.sensorType === "energy") ||
+    false;
+
+  const HeaderComponentMarker = ({
+    toggled,
+    children,
+  }: {
+    toggled: boolean;
+    children: (JSX.Element | string)[];
+  }) => {
+    return (
+      <Box
+        sx={{
+          background: toggled ? "#2188FF" : undefined,
+          color: toggled ? "white" : "#24292F",
+          fill: toggled ? "white" : "#24292F",
+          display: "flex",
+          alignItems: "center",
+          gap: "4px",
+          border: "1px solid #D8DFE6",
+          padding: "6px 16px",
+          borderRadius: "3px",
+        }}
+      >
+        {children}
+      </Box>
+    );
+  };
+
   return (
     <Box
       sx={{
@@ -23,8 +71,13 @@ export const Header = ({ companyName }: { companyName: string }) => {
           gap: "16px",
         }}
       >
-        <Box>Sensor de Energia</Box>
-        <Box>Critico</Box>
+        <HeaderComponentMarker toggled={isEnergy}>
+          <ThunderIcon color={isEnergy ? "white" : undefined} /> Sensor de
+          Energia
+        </HeaderComponentMarker>
+        <HeaderComponentMarker toggled={isCritical}>
+          <WarningIcon color={isCritical ? "white" : undefined} /> Critico
+        </HeaderComponentMarker>
       </Box>
     </Box>
   );
