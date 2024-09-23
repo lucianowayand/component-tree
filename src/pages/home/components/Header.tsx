@@ -1,48 +1,30 @@
-import { Box } from "@mui/material";
-import { HeaderLogo } from "../../../assets/header-logo";
-import { Company } from "../../../dto/companies.dto";
+import { Box, Typography } from "@mui/material";
 
-export const Header = ({
-  companies,
-  selectedCompany,
-  setSelectedCompany,
-}: {
-  companies: Company[];
-  selectedCompany?: Company;
-  setSelectedCompany: (company: Company) => void;
-}) => {
+export const Header = ({ companyName }: { companyName: string }) => {
   return (
     <Box
       sx={{
-        background: "#17192D",
-        height: "48px",
-        padding: "0 16px",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
       }}
     >
-      <HeaderLogo />
-      <Box sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-        {!!companies?.length &&
-          companies?.map((item) => (
-            <Box
-              key={item.id}
-              sx={{
-                fontWeight: 600,
-                fontSize: "12px",
-                color: "white",
-                background:
-                  item.id === selectedCompany?.id ? "#2188FF" : "#023B78",
-                cursor: "pointer",
-                padding: "4px 8px",
-              }}
-              onClick={() => setSelectedCompany(item)}
-            >
-              {item.name} Unit
-            </Box>
-          ))}
+      <Typography fontWeight={600} fontSize={20} color="#24292F">
+        Ativos{" "}
+        <span style={{ fontWeight: 400, fontSize: 14, color: "#77818C" }}>
+          / {companyName} Unit
+        </span>
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "16px",
+        }}
+      >
+        <Box>Sensor de Energia</Box>
+        <Box>Critico</Box>
       </Box>
     </Box>
   );

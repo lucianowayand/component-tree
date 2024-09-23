@@ -10,9 +10,9 @@ export const useFetchCompanies = () => {
   useEffect(() => {
     api
       .get("/companies")
-      .then((response) => {
-        setCompanies(response.data);
-        setSelectedCompany(response.data[0]);
+      .then(({ data }) => {
+        setCompanies(data);
+        setSelectedCompany(data[0]);
 
         setLoading(false);
       })
