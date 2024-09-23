@@ -2,7 +2,7 @@
 
 This project implements a dynamic Tree View Application for visualizing a company's assets, components, and locations. The hierarchy is represented through a tree structure, providing features like search, filtering by sensor types, and critical sensor status. Built with Vite and React and styled using Material-UI, this application is optimized for deployment on Vercel. 
 
-- Proof of functionaliy: `https://youtu.be/uXuNhhbjUGo`
+- [Proof of functionaliy](https://youtu.be/uXuNhhbjUGo)
 
 ## Table of Contents
 
