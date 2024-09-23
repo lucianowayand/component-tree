@@ -1,6 +1,8 @@
 # Asset Tree View Application
 
-This project implements a dynamic Tree View Application for visualizing a company's assets, components, and locations. The hierarchy is represented through a tree structure, providing features like search, filtering by sensor types, and critical sensor status. Built with Vite and React and styled using Material-UI, this application is optimized for deployment on Vercel.
+This project implements a dynamic Tree View Application for visualizing a company's assets, components, and locations. The hierarchy is represented through a tree structure, providing features like search, filtering by sensor types, and critical sensor status. Built with Vite and React and styled using Material-UI, this application is optimized for deployment on Vercel. 
+
+- Proof of functionaliy: `https://youtu.be/uXuNhhbjUGo`
 
 ## Table of Contents
 
@@ -55,9 +57,9 @@ The application fetches data from a mock API, using the following endpoints:
 ## Improvements
 Given more time, I would improve the following aspects of the project:
 
-1. Performance Enhancements: Optimize the tree rendering for larger datasets by implementing virtualization or lazy-loading.
-2. Real-Time Updates: Integrate WebSocket or long polling to fetch real-time status updates for assets and components.
-3. Enhanced UI/UX: Add animations for better navigation and user experience within the tree structure.
+1. Performance, using a debounce feature on the filter so we wouldn't rebuild the filtered tree every time we type
+2. UX, sometimes the listing re-renders for no reason, given more time I would find why and fix that.
+3. UI, as of now we are display the raw properties of the selected object
 
 ## Prerequisites
 Before you begin, ensure you have the following installed:
